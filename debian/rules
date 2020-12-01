@@ -24,7 +24,7 @@ LDFLAGS_BINDINGS = $(strip $(LDFLAGS) $(LDFLAGS_LIB_SEARCHPATH))
 export QT_SELECT := 5
 
 # Properly set configure flags
-CONFIGURE_FLAGS = --without-java --libdir=\$${prefix}/lib/$(DEB_HOST_MULTIARCH) --with-gtk=gtk3 --with-python=python3 --with-qt5
+CONFIGURE_FLAGS = --without-java  --with-gtk=gtk2 --with-python=python3 --without-qt
 
 # We enable libv4l support only on Linux platforms.
 ifeq (,$(findstring linux,$(DEB_HOST_ARCH_OS)))
@@ -35,13 +35,14 @@ endif
 	dh $@
 
 override_dh_auto_configure:
+	autoreconf -vfi
 	dh_auto_configure -- $(CONFIGURE_FLAGS)
 
 override_dh_missing:
 	dh_missing --list-missing
 
-override_dh_strip:
-	dh_strip --dbgsym-migration='zbar-dbg (<< 0.21~)'
+#override_dh_strip:
+#	dh_strip --dbgsym-migration='zbar-dbg (<< 0.21~)'
 
 override_dh_clean:
 	dh_clean
